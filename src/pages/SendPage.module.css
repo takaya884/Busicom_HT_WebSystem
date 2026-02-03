@@ -1,0 +1,48 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.info {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.sendButton {
+  width: 100%;
+  padding: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  background: #27ae60;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.sendButton:active {
+  background: #1e8449;
+}
+
+.sendButton:disabled {
+  background: #bdc3c7;
+  cursor: not-allowed;
+}
+
+.empty {
+  font-size: 12px;
+  color: #95a5a6;
+  margin: 0;
+}
+
+.note {
+  font-size: 10px;
+  color: #7f8c8d;
+  text-align: center;
+  margin: 0;
+  line-height: 1.4;
+}

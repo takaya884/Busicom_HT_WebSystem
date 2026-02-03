@@ -1,0 +1,41 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 320px;
+  height: 240px;
+  overflow: hidden;
+  font-family: 'Helvetica Neue', Arial, 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+  background: #f5f6fa;
+  color: #2c3e50;
+}
+
+#root {
+  width: 320px;
+  height: 240px;
+  overflow: hidden;
+}
+
+/* タッチ操作の最適化 */
+button, input, select, textarea {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* スクロールバーをHTの小さい画面に最適化 */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #bdc3c7;
+  border-radius: 2px;
+}

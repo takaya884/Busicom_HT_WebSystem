@@ -1,0 +1,18 @@
+.badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #eaf2f8;
+  border-radius: 12px;
+  padding: 2px 10px;
+  font-size: 12px;
+}
+
+.count {
+  font-weight: 700;
+  color: #1a5276;
+}
+
+.label {
+  color: #5d6d7e;
+}
