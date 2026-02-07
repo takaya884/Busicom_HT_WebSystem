@@ -1,90 +1,118 @@
 .container {
+  display: -webkit-flex;
   display: flex;
+  -webkit-flex-direction: column;
   flex-direction: column;
-  gap: 6px;
   height: 100%;
+  overflow: hidden;
 }
 
-.header {
+/* 情報行 */
+.infoRow {
+  display: -webkit-flex;
   display: flex;
+  -webkit-justify-content: space-between;
   justify-content: space-between;
+  -webkit-align-items: center;
   align-items: center;
+  margin-bottom: 4px;
 }
 
-.locationSection {
-  background: #fff;
-  border: 1px solid #d1fae5;
-  border-radius: 8px;
-  padding: 6px 8px;
+.modeIndicator {
+  display: -webkit-flex;
+  display: flex;
+  gap: 4px;
 }
 
-.locationLabel {
-  font-size: 9px;
-  color: #6b7280;
-  margin: 0 0 2px 0;
+.modeActive {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  background: #059669;
+  color: white;
+  border-radius: 4px;
 }
 
-.locationValue {
-  font-size: 12px;
+.modeInactive {
+  font-size: 10px;
+  padding: 2px 6px;
+  background: #e5e7eb;
+  color: #9ca3af;
+  border-radius: 4px;
+}
+
+.locationDisplay {
+  font-size: 11px;
   font-weight: 600;
   color: #059669;
-  margin: 0;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.locationValue.empty {
-  color: #9ca3af;
-  font-weight: 400;
+/* 入力セクション */
+.inputSection {
+  margin-bottom: 4px;
 }
 
-.scanSection {
-  background: #fff;
-  border: 1px solid #d1fae5;
-  border-radius: 8px;
-  padding: 6px 8px;
-}
-
-.scanLabel {
-  font-size: 9px;
-  color: #6b7280;
-  margin: 0 0 3px 0;
-}
-
-.scanInput {
+.input {
   width: 100%;
-  padding: 6px 8px;
-  font-size: 12px;
-  border: 1px solid #a7f3d0;
+  padding: 8px;
+  font-size: 13px;
+  border: 2px solid #a7f3d0;
   border-radius: 6px;
   outline: none;
+  -webkit-box-sizing: border-box;
   box-sizing: border-box;
+  background: white;
 }
 
-.scanInput:focus {
-  border-color: #10b981;
-  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.15);
+.inputFocused {
+  width: 100%;
+  padding: 8px;
+  font-size: 13px;
+  border: 2px solid #10b981;
+  border-radius: 6px;
+  outline: none;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  background: white;
+  -webkit-box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
 }
 
+/* 結果セクション */
 .resultSection {
+  -webkit-flex: 1;
   flex: 1;
-  background: #fff;
+  background: white;
   border: 1px solid #d1fae5;
-  border-radius: 8px;
-  padding: 6px 8px;
-  overflow-y: auto;
+  border-radius: 6px;
+  padding: 4px 6px;
+  overflow: hidden;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
   min-height: 0;
 }
 
 .resultHeader {
+  display: -webkit-flex;
   display: flex;
+  -webkit-justify-content: space-between;
   justify-content: space-between;
+  -webkit-align-items: center;
   align-items: center;
   margin-bottom: 4px;
+  -webkit-flex-shrink: 0;
+  flex-shrink: 0;
 }
 
 .resultTitle {
   font-size: 9px;
   color: #6b7280;
-  margin: 0;
 }
 
 .resultCount {
@@ -93,102 +121,161 @@
   color: #059669;
 }
 
+.emptyList {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-flex: 1;
+  flex: 1;
+  color: #9ca3af;
+  font-size: 11px;
+}
+
 .itemList {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  -webkit-flex: 1;
+  flex: 1;
 }
 
 .item {
+  display: -webkit-flex;
   display: flex;
+  -webkit-justify-content: space-between;
   justify-content: space-between;
+  -webkit-align-items: center;
   align-items: center;
   background: #f0fdf4;
   border-radius: 4px;
-  padding: 4px 6px;
-  font-size: 10px;
+  padding: 5px 8px;
+  margin-bottom: 3px;
+  font-size: 11px;
+}
+
+.itemSelected {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  -webkit-align-items: center;
+  align-items: center;
+  background: #dcfce7;
+  border: 2px solid #10b981;
+  border-radius: 4px;
+  padding: 3px 6px;
+  margin-bottom: 3px;
+  font-size: 11px;
 }
 
 .itemCode {
   color: #1e293b;
   font-weight: 500;
+  -webkit-flex: 1;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .itemQty {
   color: #059669;
   font-weight: 700;
+  margin-left: 8px;
 }
 
-.empty {
-  text-align: center;
-  color: #9ca3af;
-  font-size: 10px;
-  padding: 10px 0;
+.deleteHint {
+  font-size: 8px;
+  color: #dc2626;
+  margin-left: 6px;
+  background: #fef2f2;
+  padding: 1px 4px;
+  border-radius: 2px;
 }
 
+/* アクションボタン */
 .actions {
+  display: -webkit-flex;
   display: flex;
   gap: 6px;
+  margin-top: 4px;
+  -webkit-flex-shrink: 0;
+  flex-shrink: 0;
 }
 
-.actionButton {
+.btnClear {
+  -webkit-flex: 1;
   flex: 1;
   padding: 8px;
   font-size: 11px;
   font-weight: 600;
   border-radius: 6px;
   cursor: pointer;
-  -webkit-transition: all 0.15s ease;
-  transition: all 0.15s ease;
-}
-
-.primaryButton {
-  background: linear-gradient(135deg, #10b981, #059669);
-  color: #fff;
-  border: none;
-  box-shadow: 0 1px 3px rgba(16, 185, 129, 0.3);
-}
-
-.primaryButton:active {
-  -webkit-transform: scale(0.98);
-  transform: scale(0.98);
-}
-
-.primaryButton:disabled {
-  background: #d1d5db;
-  box-shadow: none;
-}
-
-.secondaryButton {
   background: #fff;
   color: #6b7280;
   border: 1px solid #d1d5db;
 }
 
-.secondaryButton:active {
-  background: #f3f4f6;
-}
-
-.modeToggle {
-  display: flex;
-  gap: 4px;
-}
-
-.modeButton {
-  padding: 3px 8px;
-  font-size: 10px;
-  border-radius: 4px;
+.btnClearFocused {
+  -webkit-flex: 1;
+  flex: 1;
+  padding: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 6px;
   cursor: pointer;
-  border: 1px solid #d1d5db;
   background: #fff;
-  color: #6b7280;
+  color: #374151;
+  border: 2px solid #10b981;
+  -webkit-box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
 }
 
-.modeButton.active {
-  background: #059669;
-  color: #fff;
-  border-color: #059669;
+.btnComplete {
+  -webkit-flex: 1;
+  flex: 1;
+  padding: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  border: none;
+}
+
+.btnCompleteFocused {
+  -webkit-flex: 1;
+  flex: 1;
+  padding: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  border: 2px solid #065f46;
+  -webkit-box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3);
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3);
+}
+
+.btnComplete:disabled,
+.btnCompleteFocused:disabled {
+  background: #d1d5db;
+  cursor: not-allowed;
+}
+
+/* 操作ヒント */
+.hint {
+  text-align: center;
+  font-size: 9px;
+  color: #9ca3af;
+  margin-top: 4px;
+  -webkit-flex-shrink: 0;
+  flex-shrink: 0;
 }
