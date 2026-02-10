@@ -279,3 +279,73 @@
   -webkit-flex-shrink: 0;
   flex-shrink: 0;
 }
+
+/* 5.5インチ端末向け */
+@media (min-width: 400px) {
+  .modeActive,
+  .modeInactive {
+    font-size: 12px;
+    padding: 4px 10px;
+  }
+
+  .locationDisplay {
+    font-size: 13px;
+    max-width: 200px;
+  }
+
+  .input,
+  .inputFocused {
+    padding: 12px;
+    font-size: 15px;
+  }
+
+  .resultSection {
+    padding: 8px 10px;
+  }
+
+  .resultTitle {
+    font-size: 11px;
+  }
+
+  .resultCount {
+    font-size: 13px;
+  }
+
+  .emptyList {
+    font-size: 13px;
+  }
+
+  .item,
+  .itemSelected {
+    padding: 8px 12px;
+    margin-bottom: 5px;
+    font-size: 13px;
+  }
+
+  .itemQty {
+    font-size: 14px;
+  }
+
+  .deleteHint {
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+
+  .actions {
+    gap: 10px;
+    margin-top: 8px;
+  }
+
+  .btnClear,
+  .btnClearFocused,
+  .btnComplete,
+  .btnCompleteFocused {
+    padding: 12px;
+    font-size: 13px;
+  }
+
+  .hint {
+    font-size: 11px;
+    margin-top: 6px;
+  }
+}

@@ -39,8 +39,8 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 320px;
-  height: 240px;
+  width: 100%;
+  height: 100%;
   background: rgba(0, 0, 0, 0.5);
   display: -webkit-flex;
   display: flex;
@@ -55,7 +55,9 @@
   background: #fff;
   border-radius: 10px;
   padding: 12px 14px;
-  width: 240px;
+  width: 80%;
+  max-width: 280px;
+  -webkit-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   text-align: center;
 }
@@ -259,4 +261,62 @@
   background: rgba(255, 255, 255, 0.5);
   border-radius: 4px;
   margin-top: 4px;
+}
+
+/* 5.5インチ端末向け */
+@media (min-width: 400px) {
+  .clearButton {
+    font-size: 13px;
+    padding: 6px 14px;
+  }
+
+  .confirmText {
+    font-size: 14px;
+  }
+
+  .confirmYes,
+  .confirmYesFocused,
+  .confirmNo,
+  .confirmNoFocused {
+    font-size: 13px;
+    padding: 8px 20px;
+  }
+
+  .emptyIcon {
+    font-size: 48px;
+  }
+
+  .empty {
+    font-size: 14px;
+  }
+
+  .item,
+  .itemSelected {
+    padding: 10px 12px;
+    margin-bottom: 6px;
+  }
+
+  .itemIndex {
+    width: 26px;
+    height: 26px;
+    font-size: 12px;
+  }
+
+  .itemValue {
+    font-size: 14px;
+  }
+
+  .itemTime {
+    font-size: 11px;
+  }
+
+  .deleteHint {
+    font-size: 10px;
+    padding: 3px 8px;
+  }
+
+  .hint {
+    font-size: 11px;
+    padding: 6px 0;
+  }
 }

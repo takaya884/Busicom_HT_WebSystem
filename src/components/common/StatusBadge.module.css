@@ -1,5 +1,7 @@
 .badge {
+  display: -webkit-flex;
   display: flex;
+  -webkit-align-items: center;
   align-items: center;
   gap: 3px;
   background: #ecfdf5;
@@ -16,4 +18,14 @@
 
 .label {
   color: #6b7280;
+}
+
+/* 5.5インチ端末向け */
+@media (min-width: 400px) {
+  .badge {
+    gap: 4px;
+    padding: 3px 12px;
+    font-size: 13px;
+    border-radius: 12px;
+  }
 }
