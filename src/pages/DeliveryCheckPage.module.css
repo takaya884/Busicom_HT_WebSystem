@@ -166,10 +166,10 @@
 
 .toastSuccess {
   position: fixed;
-  bottom: 50px;
-  left: 50%;
-  -webkit-transform: translateX(-50%);
-  transform: translateX(-50%);
+  top: 36px;
+  left: 10px;
+  right: 10px;
+  max-width: 300px;
   padding: 8px 16px;
   border-radius: 6px;
   font-size: 12px;
@@ -177,14 +177,15 @@
   color: white;
   background: rgba(16, 185, 129, 0.95);
   z-index: 1000;
+  text-align: center;
 }
 
 .toastError {
   position: fixed;
-  bottom: 50px;
-  left: 50%;
-  -webkit-transform: translateX(-50%);
-  transform: translateX(-50%);
+  top: 36px;
+  left: 10px;
+  right: 10px;
+  max-width: 300px;
   padding: 8px 16px;
   border-radius: 6px;
   font-size: 12px;
@@ -192,4 +193,5 @@
   color: white;
   background: rgba(220, 38, 38, 0.95);
   z-index: 1000;
+  text-align: center;
 }
