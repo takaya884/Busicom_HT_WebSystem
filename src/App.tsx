@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
+import { LoginPage } from './pages/LoginPage';
 import { MenuPage } from './pages/MenuPage';
 import { ScanPage } from './pages/ScanPage';
 import { SendPage } from './pages/SendPage';
@@ -13,8 +15,26 @@ import { ReceiveDataPage } from './pages/ReceiveDataPage';
 /**
  * アプリケーションルート
  * HashRouterを使用: オフラインHTでファイルベースアクセス時に対応
+ * 未ログイン時はログイン画面を表示
  */
 export default function App() {
+  const authState = useState(false);
+  const isLoggedIn = authState[0];
+  const setIsLoggedIn = authState[1];
+  
+  function handleLoginSuccess(userId: string) {
+    sessionStorage.setItem('loggedInUser', userId);
+    setIsLoggedIn(true);
+  }
+
+  if (!isLoggedIn) {
+    return (
+      <HashRouter>
+        <LoginPage onLoginSuccess={handleLoginSuccess} />
+      </HashRouter>
+    );
+  }
+
   return (
     <HashRouter>
       <Routes>

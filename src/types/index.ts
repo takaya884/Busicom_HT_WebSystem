@@ -28,3 +28,10 @@ export interface SendResult {
   message: string;
   sentCount?: number;
 }
+
+/** 認証結果 */
+export interface AuthResult {
+  success: boolean;
+  message: string;
+  userId?: string;
+}

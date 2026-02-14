@@ -32,6 +32,8 @@ export async function initDatabase(): Promise<Database> {
       try {
         const uint8Array = base64ToUint8Array(savedDb);
         db = new SQL.Database(uint8Array);
+        // 既存DBにも新規テーブルを追加（IF NOT EXISTS）
+        createTables(db);
       } catch (_e) {
         // 復元失敗時は新規作成
         db = new SQL.Database();
@@ -57,6 +59,12 @@ function createTables(database: Database): void {
       id TEXT PRIMARY KEY,
       value TEXT NOT NULL,
       scanned_at TEXT NOT NULL
+    )
+  `);
+  database.run(`
+    CREATE TABLE IF NOT EXISTS users (
+      id TEXT PRIMARY KEY,
+      password TEXT NOT NULL
     )
   `);
 }

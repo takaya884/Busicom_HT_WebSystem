@@ -1,0 +1,155 @@
+.container {
+  width: 100%;
+  height: 100%;
+  min-width: 320px;
+  min-height: 240px;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  background: #f0faf4;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+}
+
+.card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 16px 20px;
+  width: 260px;
+  -webkit-box-shadow: 0 2px 8px rgba(16, 185, 129, 0.15);
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.15);
+  border: 1px solid #d1fae5;
+}
+
+.title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #059669;
+  text-align: center;
+  margin: 0 0 12px 0;
+}
+
+.field {
+  margin-bottom: 8px;
+}
+
+.label {
+  display: block;
+  font-size: 10px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 3px;
+}
+
+.input {
+  width: 100%;
+  padding: 6px 8px;
+  font-size: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  outline: none;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-transition: border-color 0.15s;
+  transition: border-color 0.15s;
+}
+
+.input:focus {
+  border-color: #10b981;
+  -webkit-box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+}
+
+.loginButton {
+  width: 100%;
+  padding: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  background: #10b981;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 4px;
+  -webkit-transition: background 0.15s;
+  transition: background 0.15s;
+  outline: none;
+}
+
+.loginButton:active {
+  background: #059669;
+}
+
+.loginButton:focus {
+  -webkit-box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.4);
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.4);
+}
+
+.loginButton:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+.error {
+  font-size: 10px;
+  color: #dc2626;
+  text-align: center;
+  margin-top: 8px;
+}
+
+.status {
+  font-size: 9px;
+  color: #6b7280;
+  text-align: center;
+  margin-top: 8px;
+}
+
+/* 5.5インチ端末向け */
+@media (min-width: 400px) {
+  .card {
+    padding: 24px 28px;
+    width: 320px;
+    border-radius: 12px;
+  }
+
+  .title {
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+
+  .field {
+    margin-bottom: 12px;
+  }
+
+  .label {
+    font-size: 13px;
+    margin-bottom: 4px;
+  }
+
+  .input {
+    padding: 10px 12px;
+    font-size: 14px;
+    border-radius: 6px;
+  }
+
+  .loginButton {
+    padding: 12px;
+    font-size: 14px;
+    border-radius: 6px;
+    margin-top: 8px;
+  }
+
+  .error {
+    font-size: 12px;
+    margin-top: 12px;
+  }
+
+  .status {
+    font-size: 11px;
+    margin-top: 12px;
+  }
+}
