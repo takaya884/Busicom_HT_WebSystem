@@ -3,19 +3,7 @@
   display: flex;
   -webkit-flex-direction: column;
   flex-direction: column;
-  height: 100vh;
-  background: linear-gradient(180deg, #f0fdf4 0%, #dcfce7 100%);
-  overflow: hidden;
-}
-
-.main {
-  -webkit-flex: 1;
-  flex: 1;
-  display: -webkit-flex;
-  display: flex;
-  -webkit-flex-direction: column;
-  flex-direction: column;
-  padding: 6px;
+  height: 100%;
   overflow: hidden;
 }
 
@@ -27,7 +15,7 @@
   width: 100%;
   padding: 8px 10px;
   font-size: 14px;
-  border: 2px solid #a7f3d0;
+  border: 2px solid #10b981;
   border-radius: 6px;
   background: white;
   outline: none;
@@ -36,7 +24,7 @@
 }
 
 .input:focus {
-  border-color: #10b981;
+  border-color: #059669;
   -webkit-box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
   box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
 }
@@ -87,7 +75,7 @@
 }
 
 .itemQty {
-  color: #10b981;
+  color: #059669;
   font-weight: 600;
 }
 
@@ -144,19 +132,26 @@
   color: white;
 }
 
-.toast {
-  position: fixed;
-  top: 36px;
-  left: 50%;
-  -webkit-transform: translateX(-50%);
-  transform: translateX(-50%);
-  max-width: calc(100% - 20px);
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 500;
-  color: white;
-  background: rgba(16, 185, 129, 0.95);
-  z-index: 1000;
-  text-align: center;
+/* 5.5インチ端末向け */
+@media (min-width: 400px) {
+  .input {
+    padding: 12px;
+    font-size: 16px;
+  }
+
+  .stats {
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+
+  .listItem {
+    padding: 8px 10px;
+    font-size: 14px;
+  }
+
+  .buttonClear,
+  .buttonPrimary {
+    padding: 12px;
+    font-size: 14px;
+  }
 }

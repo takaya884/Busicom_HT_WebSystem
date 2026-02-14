@@ -3,19 +3,7 @@
   display: flex;
   -webkit-flex-direction: column;
   flex-direction: column;
-  height: 100vh;
-  background: linear-gradient(180deg, #ede9fe 0%, #ddd6fe 100%);
-  overflow: hidden;
-}
-
-.main {
-  -webkit-flex: 1;
-  flex: 1;
-  display: -webkit-flex;
-  display: flex;
-  -webkit-flex-direction: column;
-  flex-direction: column;
-  padding: 6px;
+  height: 100%;
   overflow: hidden;
 }
 
@@ -27,7 +15,7 @@
   width: 100%;
   padding: 8px 10px;
   font-size: 14px;
-  border: 2px solid #c4b5fd;
+  border: 2px solid #10b981;
   border-radius: 6px;
   background: white;
   outline: none;
@@ -36,9 +24,9 @@
 }
 
 .input:focus {
-  border-color: #8b5cf6;
-  -webkit-box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
-  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+  border-color: #059669;
+  -webkit-box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
 }
 
 .stats {
@@ -47,10 +35,10 @@
   -webkit-justify-content: center;
   justify-content: center;
   padding: 4px 8px;
-  background: rgba(139, 92, 246, 0.15);
+  background: rgba(16, 185, 129, 0.1);
   border-radius: 4px;
   font-size: 11px;
-  color: #5b21b6;
+  color: #065f46;
   margin-bottom: 6px;
 }
 
@@ -62,7 +50,7 @@
   padding: 6px;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  border: 1px solid #c4b5fd;
+  border: 1px solid #a7f3d0;
 }
 
 .listItem {
@@ -87,14 +75,19 @@
 }
 
 .deleteBtn {
-  background: #fecaca;
+  background: #fef2f2;
   color: #dc2626;
-  border: none;
+  border: 1px solid #fca5a5;
   border-radius: 4px;
   padding: 2px 8px;
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 700;
   cursor: pointer;
+  line-height: 1;
+}
+
+.deleteBtn:active {
+  background: #fecaca;
 }
 
 .empty {
@@ -146,23 +139,35 @@
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  background: linear-gradient(135deg, #10b981, #059669);
   color: white;
 }
 
-.toast {
-  position: fixed;
-  top: 36px;
-  left: 50%;
-  -webkit-transform: translateX(-50%);
-  transform: translateX(-50%);
-  max-width: calc(100% - 20px);
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 500;
-  color: white;
-  background: rgba(139, 92, 246, 0.95);
-  z-index: 1000;
-  text-align: center;
+/* 5.5インチ端末向け */
+@media (min-width: 400px) {
+  .input {
+    padding: 12px;
+    font-size: 16px;
+  }
+
+  .stats {
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+
+  .listItem {
+    padding: 8px 10px;
+    font-size: 14px;
+  }
+
+  .deleteBtn {
+    font-size: 16px;
+    padding: 4px 10px;
+  }
+
+  .buttonClear,
+  .buttonPrimary {
+    padding: 12px;
+    font-size: 14px;
+  }
 }

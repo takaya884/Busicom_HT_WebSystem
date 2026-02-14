@@ -1,5 +1,6 @@
 import type { ScannedData, SendResult } from '../types';
 import { writeLog } from './logService';
+import { isDevMode } from '../utils/envUtils';
 
 /** デフォルトの送信先URL(環境変数で上書き可能) */
 var API_URL = import.meta.env.VITE_API_URL || '/api/scanned-data';
@@ -26,6 +27,12 @@ export function setApiUrl(url: string): void {
 
 /** ネットワーク接続確認 */
 export async function checkNetwork(): Promise<boolean> {
+  // 開発モードではサーバー接続確認をスキップし常にオンラインとみなす
+  if (isDevMode()) {
+    writeLog('INFO', 'NETWORK', '[DEV] ネットワーク接続確認スキップ（開発モード）');
+    return true;
+  }
+
   // navigator.onLineで基本チェック
   if (!navigator.onLine) {
     writeLog('WARN', 'NETWORK', 'オフライン状態です');
@@ -61,6 +68,17 @@ function sleep(ms: number): Promise<void> {
 export async function sendData(data: ScannedData[]): Promise<SendResult> {
   if (data.length === 0) {
     return { success: false, message: '送信するデータがありません' };
+  }
+
+  // 開発モードでは擬似送信
+  if (isDevMode()) {
+    writeLog('INFO', 'NETWORK', '[DEV] データ擬似送信: ' + data.length + '件');
+    await sleep(500);
+    return {
+      success: true,
+      message: '[DEV] ' + data.length + '件のデータを送信しました（擬似）',
+      sentCount: data.length,
+    };
   }
 
   writeLog('INFO', 'NETWORK', 'データ送信開始: ' + data.length + '件');
@@ -148,6 +166,15 @@ export interface SendStatus {
 
 /** 送信前のステータス確認 */
 export async function checkSendStatus(): Promise<SendStatus> {
+  // 開発モードでは常にオンライン・接続可能
+  if (isDevMode()) {
+    return {
+      isOnline: true,
+      apiUrl: API_URL + ' [DEV]',
+      canConnect: true,
+    };
+  }
+
   var isOnline = navigator.onLine;
   var canConnect = false;
 

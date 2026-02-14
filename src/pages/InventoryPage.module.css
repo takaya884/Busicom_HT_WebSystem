@@ -5,100 +5,119 @@
   flex-direction: column;
   height: 100%;
   overflow: hidden;
+  padding: 4px;
 }
 
-/* 情報行 */
-.infoRow {
+/* ヘッダー情報（日付・ユーザー名） */
+.headerInfo {
   display: -webkit-flex;
   display: flex;
-  -webkit-justify-content: space-between;
-  justify-content: space-between;
+  gap: 6px;
   -webkit-align-items: center;
   align-items: center;
-  margin-bottom: 4px;
+  font-size: 9px;
 }
 
-.modeIndicator {
+.headerDate {
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.headerUser {
+  color: #6b7280;
+}
+
+/* ローディング・オフラインメッセージ */
+.loadingMessage {
+  text-align: center;
+  padding: 40px 10px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.offlineMessage {
+  text-align: center;
+  padding: 30px 10px;
+  font-size: 12px;
+  color: #dc2626;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  line-height: 1.6;
+}
+
+/* 入力エリア */
+.inputArea {
+  border: 2px solid #10b981;
+  border-radius: 4px;
+  padding: 4px;
+  margin-bottom: 6px;
+  background: #fff;
+  -webkit-flex-shrink: 0;
+  flex-shrink: 0;
+}
+
+.inputRow {
   display: -webkit-flex;
   display: flex;
-  gap: 4px;
+  -webkit-align-items: center;
+  align-items: center;
+  margin-bottom: 2px;
 }
 
-.modeActive {
-  font-size: 10px;
-  font-weight: 600;
-  padding: 2px 6px;
-  background: #059669;
-  color: white;
-  border-radius: 4px;
+.inputRow:last-child {
+  margin-bottom: 0;
 }
 
-.modeInactive {
-  font-size: 10px;
-  padding: 2px 6px;
-  background: #e5e7eb;
-  color: #9ca3af;
-  border-radius: 4px;
-}
-
-.locationDisplay {
+.inputLabel {
   font-size: 11px;
-  font-weight: 600;
-  color: #059669;
-  max-width: 150px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  font-weight: 700;
+  color: #fff;
+  background: #10b981;
+  padding: 4px 6px;
+  text-align: center;
+  min-width: 42px;
+  line-height: 1.2;
+  -webkit-flex-shrink: 0;
+  flex-shrink: 0;
 }
 
-/* 入力セクション */
-.inputSection {
-  margin-bottom: 4px;
-}
-
-.input {
-  width: 100%;
-  padding: 8px;
-  font-size: 13px;
-  border: 2px solid #a7f3d0;
-  border-radius: 6px;
-  outline: none;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  background: white;
-}
-
-.inputFocused {
-  width: 100%;
-  padding: 8px;
-  font-size: 13px;
-  border: 2px solid #10b981;
-  border-radius: 6px;
-  outline: none;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  background: white;
-  -webkit-box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
-  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
-}
-
-/* 結果セクション */
-.resultSection {
+.dateInput {
   -webkit-flex: 1;
   flex: 1;
-  background: white;
-  border: 1px solid #d1fae5;
-  border-radius: 6px;
-  padding: 4px 6px;
-  overflow: hidden;
-  display: -webkit-flex;
-  display: flex;
-  -webkit-flex-direction: column;
-  flex-direction: column;
-  min-height: 0;
+  padding: 6px 8px;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid #d1d5db;
+  outline: none;
+  background: #fff;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
-.resultHeader {
+.dateInput:focus {
+  border-color: #10b981;
+}
+
+.barcodeInput {
+  -webkit-flex: 1;
+  flex: 1;
+  padding: 6px 8px;
+  font-size: 13px;
+  border: 1px solid #d1d5db;
+  outline: none;
+  background: #fff;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.barcodeInput:focus {
+  border-color: #10b981;
+}
+
+/* リストヘッダー */
+.listHeader {
   display: -webkit-flex;
   display: flex;
   -webkit-justify-content: space-between;
@@ -110,20 +129,12 @@
   flex-shrink: 0;
 }
 
-.resultTitle {
-  font-size: 9px;
-  color: #6b7280;
-}
-
-.resultCount {
-  font-size: 10px;
-  font-weight: 600;
-  color: #059669;
-}
-
-.emptyList {
+/* 空状態 */
+.empty {
   display: -webkit-flex;
   display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
   -webkit-align-items: center;
   align-items: center;
   -webkit-justify-content: center;
@@ -131,143 +142,130 @@
   -webkit-flex: 1;
   flex: 1;
   color: #9ca3af;
-  font-size: 11px;
+  font-size: 12px;
 }
 
-.itemList {
+.emptyIcon {
+  font-size: 32px;
+  margin-bottom: 8px;
+  opacity: 0.5;
+}
+
+/* リスト */
+.list {
   list-style: none;
   margin: 0;
   padding: 0;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
   -webkit-flex: 1;
   flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .item {
   display: -webkit-flex;
   display: flex;
-  -webkit-justify-content: space-between;
-  justify-content: space-between;
   -webkit-align-items: center;
   align-items: center;
-  background: #f0fdf4;
-  border-radius: 4px;
-  padding: 5px 8px;
-  margin-bottom: 3px;
-  font-size: 11px;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  background: #fff;
+  border: 1px solid #d1fae5;
+  border-radius: 6px;
+  padding: 6px 8px;
+  margin-bottom: 4px;
 }
 
 .itemSelected {
   display: -webkit-flex;
   display: flex;
-  -webkit-justify-content: space-between;
-  justify-content: space-between;
   -webkit-align-items: center;
   align-items: center;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
   background: #dcfce7;
   border: 2px solid #10b981;
-  border-radius: 4px;
-  padding: 3px 6px;
-  margin-bottom: 3px;
-  font-size: 11px;
+  border-radius: 6px;
+  padding: 5px 7px;
+  margin-bottom: 4px;
 }
 
-.itemCode {
-  color: #1e293b;
-  font-weight: 500;
+.itemInfo {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
   -webkit-flex: 1;
   flex: 1;
+}
+
+.itemIndex {
+  font-size: 10px;
+  font-weight: 700;
+  color: #059669;
+  background: #ecfdf5;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-flex-shrink: 0;
+  flex-shrink: 0;
+}
+
+.itemDetail {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.itemValue {
+  font-size: 12px;
+  font-weight: 600;
+  color: #1e293b;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.itemQty {
-  color: #059669;
+.itemSub {
+  font-size: 9px;
+  color: #6b7280;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.itemTime {
+  font-size: 9px;
+  color: #9ca3af;
+}
+
+.deleteButton {
+  font-size: 14px;
   font-weight: 700;
-  margin-left: 8px;
-}
-
-.deleteHint {
-  font-size: 8px;
   color: #dc2626;
-  margin-left: 6px;
   background: #fef2f2;
-  padding: 1px 4px;
-  border-radius: 2px;
-}
-
-/* アクションボタン */
-.actions {
-  display: -webkit-flex;
-  display: flex;
-  gap: 6px;
-  margin-top: 4px;
+  border: 1px solid #fca5a5;
+  border-radius: 4px;
+  padding: 2px 8px;
+  cursor: pointer;
+  outline: none;
   -webkit-flex-shrink: 0;
   flex-shrink: 0;
+  line-height: 1;
 }
 
-.btnClear {
-  -webkit-flex: 1;
-  flex: 1;
-  padding: 8px;
-  font-size: 11px;
-  font-weight: 600;
-  border-radius: 6px;
-  cursor: pointer;
-  background: #fff;
-  color: #6b7280;
-  border: 1px solid #d1d5db;
-}
-
-.btnClearFocused {
-  -webkit-flex: 1;
-  flex: 1;
-  padding: 8px;
-  font-size: 11px;
-  font-weight: 600;
-  border-radius: 6px;
-  cursor: pointer;
-  background: #fff;
-  color: #374151;
-  border: 2px solid #10b981;
-  -webkit-box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
-  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
-}
-
-.btnComplete {
-  -webkit-flex: 1;
-  flex: 1;
-  padding: 8px;
-  font-size: 11px;
-  font-weight: 600;
-  border-radius: 6px;
-  cursor: pointer;
-  background: linear-gradient(135deg, #10b981, #059669);
-  color: white;
-  border: none;
-}
-
-.btnCompleteFocused {
-  -webkit-flex: 1;
-  flex: 1;
-  padding: 8px;
-  font-size: 11px;
-  font-weight: 600;
-  border-radius: 6px;
-  cursor: pointer;
-  background: linear-gradient(135deg, #10b981, #059669);
-  color: white;
-  border: 2px solid #065f46;
-  -webkit-box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3);
-  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3);
-}
-
-.btnComplete:disabled,
-.btnCompleteFocused:disabled {
-  background: #d1d5db;
-  cursor: not-allowed;
+.deleteButton:active {
+  background: #fecaca;
 }
 
 /* 操作ヒント */
@@ -275,77 +273,91 @@
   text-align: center;
   font-size: 9px;
   color: #9ca3af;
-  margin-top: 4px;
+  padding: 4px 0;
   -webkit-flex-shrink: 0;
   flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 4px;
+  margin-top: 4px;
 }
 
 /* 5.5インチ端末向け */
 @media (min-width: 400px) {
-  .modeActive,
-  .modeInactive {
-    font-size: 12px;
-    padding: 4px 10px;
+  .container {
+    padding: 8px;
   }
 
-  .locationDisplay {
+  .headerInfo {
+    font-size: 11px;
+    gap: 8px;
+  }
+
+  .loadingMessage {
+    font-size: 14px;
+    padding: 60px 16px;
+  }
+
+  .offlineMessage {
+    font-size: 14px;
+    padding: 40px 16px;
+  }
+
+  .inputArea {
+    padding: 8px;
+    margin-bottom: 10px;
+  }
+
+  .inputLabel {
     font-size: 13px;
-    max-width: 200px;
+    padding: 6px 10px;
+    min-width: 56px;
   }
 
-  .input,
-  .inputFocused {
-    padding: 12px;
+  .dateInput,
+  .barcodeInput {
+    padding: 10px 12px;
     font-size: 15px;
   }
 
-  .resultSection {
-    padding: 8px 10px;
+  .emptyIcon {
+    font-size: 48px;
   }
 
-  .resultTitle {
-    font-size: 11px;
-  }
-
-  .resultCount {
-    font-size: 13px;
-  }
-
-  .emptyList {
-    font-size: 13px;
+  .empty {
+    font-size: 14px;
   }
 
   .item,
   .itemSelected {
-    padding: 8px 12px;
-    margin-bottom: 5px;
-    font-size: 13px;
+    padding: 10px 12px;
+    margin-bottom: 6px;
   }
 
-  .itemQty {
+  .itemIndex {
+    width: 26px;
+    height: 26px;
+    font-size: 12px;
+  }
+
+  .itemValue {
     font-size: 14px;
   }
 
-  .deleteHint {
-    font-size: 10px;
-    padding: 2px 6px;
+  .itemSub {
+    font-size: 11px;
   }
 
-  .actions {
-    gap: 10px;
-    margin-top: 8px;
+  .itemTime {
+    font-size: 11px;
   }
 
-  .btnClear,
-  .btnClearFocused,
-  .btnComplete,
-  .btnCompleteFocused {
-    padding: 12px;
-    font-size: 13px;
+  .deleteButton {
+    font-size: 16px;
+    padding: 4px 10px;
   }
 
   .hint {
     font-size: 11px;
-    margin-top: 6px;
+    padding: 6px 0;
   }
 }

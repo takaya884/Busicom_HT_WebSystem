@@ -1,6 +1,7 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Header } from '../components/layout/Header';
+import { AppLayout } from '../components/layout/AppLayout';
+import { Toast } from '../components/common/Toast';
 import styles from './ReceivingPage.module.css';
 
 /**
@@ -11,32 +12,26 @@ export function ReceivingPage() {
   const inputRef = useRef<HTMLInputElement>(null);
   const [scannedCode, setScannedCode] = useState('');
   const [items, setItems] = useState<Array<{ code: string; quantity: number }>>([]);
-  const [toast, setToast] = useState<string | null>(null);
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
 
   useEffect(function() {
     inputRef.current?.focus();
   }, []);
 
-  const showToast = useCallback(function(message: string) {
-    setToast(message);
-    setTimeout(function() { setToast(null); }, 2000);
-  }, []);
-
   function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Enter') {
       e.preventDefault();
-      var code = scannedCode.trim();
+      const code = scannedCode.trim();
       if (code) {
-        // 同一コードは数量加算
-        var existingIndex = items.findIndex(function(item) { return item.code === code; });
+        const existingIndex = items.findIndex(function(item) { return item.code === code; });
         if (existingIndex >= 0) {
-          var newItems = items.slice();
+          const newItems = items.slice();
           newItems[existingIndex].quantity += 1;
           setItems(newItems);
         } else {
           setItems(items.concat([{ code: code, quantity: 1 }]));
         }
-        showToast('入庫: ' + code);
+        setToast({ message: '入庫: ' + code, type: 'success' });
         setScannedCode('');
       }
     } else if (e.key === 'Escape' || e.key === 'Backspace') {
@@ -46,13 +41,11 @@ export function ReceivingPage() {
     }
   }
 
-  var totalQuantity = items.reduce(function(sum, item) { return sum + item.quantity; }, 0);
+  const totalQuantity = items.reduce(function(sum, item) { return sum + item.quantity; }, 0);
 
   return (
-    <div className={styles.container}>
-      <Header title="入庫" />
-
-      <main className={styles.main}>
+    <AppLayout title="入庫">
+      <div className={styles.container}>
         <div className={styles.inputSection}>
           <input
             ref={inputRef}
@@ -92,13 +85,20 @@ export function ReceivingPage() {
           <button className={styles.buttonClear} onClick={function() { setItems([]); }}>
             クリア
           </button>
-          <button className={styles.buttonPrimary} onClick={function() { showToast('入庫完了'); }}>
+          <button className={styles.buttonPrimary} onClick={function() { setToast({ message: '入庫完了', type: 'success' }); }}>
             完了
           </button>
         </div>
-      </main>
+      </div>
 
-      {toast && <div className={styles.toast}>{toast}</div>}
-    </div>
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={function() { setToast(null); }}
+          duration={2000}
+        />
+      )}
+    </AppLayout>
   );
 }

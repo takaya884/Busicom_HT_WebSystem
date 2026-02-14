@@ -3,19 +3,7 @@
   display: flex;
   -webkit-flex-direction: column;
   flex-direction: column;
-  height: 100vh;
-  background: linear-gradient(180deg, #fef3c7 0%, #fde68a 100%);
-  overflow: hidden;
-}
-
-.main {
-  -webkit-flex: 1;
-  flex: 1;
-  display: -webkit-flex;
-  display: flex;
-  -webkit-flex-direction: column;
-  flex-direction: column;
-  padding: 6px;
+  height: 100%;
   overflow: hidden;
 }
 
@@ -27,7 +15,7 @@
   width: 100%;
   padding: 8px 10px;
   font-size: 14px;
-  border: 2px solid #fcd34d;
+  border: 2px solid #10b981;
   border-radius: 6px;
   background: white;
   outline: none;
@@ -36,9 +24,9 @@
 }
 
 .input:focus {
-  border-color: #f59e0b;
-  -webkit-box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
-  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+  border-color: #059669;
+  -webkit-box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
 }
 
 .stats {
@@ -47,10 +35,10 @@
   -webkit-justify-content: space-between;
   justify-content: space-between;
   padding: 4px 8px;
-  background: rgba(245, 158, 11, 0.15);
+  background: rgba(16, 185, 129, 0.1);
   border-radius: 4px;
   font-size: 11px;
-  color: #92400e;
+  color: #065f46;
   margin-bottom: 6px;
 }
 
@@ -62,7 +50,7 @@
   padding: 6px;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  border: 1px solid #fcd34d;
+  border: 1px solid #a7f3d0;
 }
 
 .listItem {
@@ -87,7 +75,7 @@
 }
 
 .itemQty {
-  color: #f59e0b;
+  color: #059669;
   font-weight: 600;
 }
 
@@ -140,23 +128,30 @@
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  background: linear-gradient(135deg, #f59e0b, #d97706);
+  background: linear-gradient(135deg, #10b981, #059669);
   color: white;
 }
 
-.toast {
-  position: fixed;
-  top: 36px;
-  left: 50%;
-  -webkit-transform: translateX(-50%);
-  transform: translateX(-50%);
-  max-width: calc(100% - 20px);
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 500;
-  color: white;
-  background: rgba(245, 158, 11, 0.95);
-  z-index: 1000;
-  text-align: center;
+/* 5.5インチ端末向け */
+@media (min-width: 400px) {
+  .input {
+    padding: 12px;
+    font-size: 16px;
+  }
+
+  .stats {
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+
+  .listItem {
+    padding: 8px 10px;
+    font-size: 14px;
+  }
+
+  .buttonClear,
+  .buttonPrimary {
+    padding: 12px;
+    font-size: 14px;
+  }
 }

@@ -35,3 +35,17 @@ export interface AuthResult {
   message: string;
   userId?: string;
 }
+
+/** 棚卸登録アイテム */
+export interface InventoryRecord {
+  id: string;
+  hinban: string;
+  kata: string;
+  joudai: number;
+  registeredAt: string;
+}
+
+/** 棚卸設定（バックエンドから取得） */
+export interface InventoryConfig {
+  mode: 'online' | 'offline';
+}

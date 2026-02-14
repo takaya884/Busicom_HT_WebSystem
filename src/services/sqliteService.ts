@@ -67,6 +67,22 @@ function createTables(database: Database): void {
       password TEXT NOT NULL
     )
   `);
+  // デフォルトユーザーを登録（オフライン認証用）
+  insertDefaultUsers(database);
+}
+
+/**
+ * デフォルトユーザーを登録（存在しない場合のみ）
+ */
+function insertDefaultUsers(database: Database): void {
+  database.run(
+    "INSERT OR IGNORE INTO users (id, password) VALUES (?, ?)",
+    ['admin', 'admin']
+  );
+  database.run(
+    "INSERT OR IGNORE INTO users (id, password) VALUES (?, ?)",
+    ['user', 'user']
+  );
 }
 
 /**

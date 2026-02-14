@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Header } from '../components/layout/Header';
+import { AppLayout } from '../components/layout/AppLayout';
+import { Toast } from '../components/common/Toast';
 import styles from './DeliveryCheckPage.module.css';
 
 interface CheckItem {
@@ -23,7 +24,7 @@ export function DeliveryCheckPage() {
     { code: '4901234567891', expected: 5, scanned: 0, status: 'pending' },
     { code: '4901234567892', expected: 2, scanned: 0, status: 'pending' },
   ]);
-  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
 
   useEffect(function() {
     inputRef.current?.focus();
@@ -31,19 +32,17 @@ export function DeliveryCheckPage() {
 
   const showToast = useCallback(function(message: string, type: 'success' | 'error') {
     setToast({ message: message, type: type });
-    setTimeout(function() { setToast(null); }, 2000);
   }, []);
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Enter') {
       e.preventDefault();
-      var code = scannedCode.trim();
+      const code = scannedCode.trim();
       if (code) {
-        var index = items.findIndex(function(item) { return item.code === code; });
+        const index = items.findIndex(function(item) { return item.code === code; });
         if (index >= 0) {
-          var newItems = items.slice();
+          const newItems = items.slice();
           newItems[index].scanned += 1;
-          // ステータス更新
           if (newItems[index].scanned === newItems[index].expected) {
             newItems[index].status = 'ok';
             showToast('✓ 数量一致', 'success');
@@ -66,14 +65,12 @@ export function DeliveryCheckPage() {
     }
   }
 
-  var okCount = items.filter(function(i) { return i.status === 'ok'; }).length;
-  var ngCount = items.filter(function(i) { return i.status === 'ng'; }).length;
+  const okCount = items.filter(function(i) { return i.status === 'ok'; }).length;
+  const ngCount = items.filter(function(i) { return i.status === 'ng'; }).length;
 
   return (
-    <div className={styles.container}>
-      <Header title="納品チェック" />
-
-      <main className={styles.main}>
+    <AppLayout title="納品チェック">
+      <div className={styles.container}>
         <div className={styles.inputSection}>
           <input
             ref={inputRef}
@@ -94,7 +91,7 @@ export function DeliveryCheckPage() {
 
         <div className={styles.list}>
           {items.map(function(item, index) {
-            var statusClass = item.status === 'ok' ? styles.itemOk :
+            const statusClass = item.status === 'ok' ? styles.itemOk :
                               item.status === 'ng' ? styles.itemNg : styles.itemPending;
             return (
               <div key={index} className={statusClass}>
@@ -111,7 +108,7 @@ export function DeliveryCheckPage() {
           <button
             className={styles.buttonClear}
             onClick={function() {
-              var resetItems = items.map(function(item) {
+              const resetItems = items.map(function(item) {
                 return { code: item.code, expected: item.expected, scanned: 0, status: 'pending' as const };
               });
               setItems(resetItems);
@@ -123,13 +120,16 @@ export function DeliveryCheckPage() {
             完了
           </button>
         </div>
-      </main>
+      </div>
 
       {toast && (
-        <div className={toast.type === 'success' ? styles.toastSuccess : styles.toastError}>
-          {toast.message}
-        </div>
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={function() { setToast(null); }}
+          duration={2000}
+        />
       )}
-    </div>
+    </AppLayout>
   );
 }

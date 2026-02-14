@@ -1,325 +1,306 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppLayout } from '../components/layout/AppLayout';
 import { Toast } from '../components/common/Toast';
+import { StatusBadge } from '../components/common/StatusBadge';
 import { writeLog } from '../services/logService';
-import { generateId } from '../utils/dateUtils';
+import { formatDate, formatDateTime } from '../utils/dateUtils';
+import {
+  fetchInventoryConfig,
+  fetchProductByBarcode,
+} from '../services/inventoryService';
+import type { InventoryRecord, InventoryConfig } from '../types';
 import styles from './InventoryPage.module.css';
 
-interface InventoryItem {
-  id: string;
-  code: string;
-  quantity: number;
-  scannedAt: string;
-}
-
-type ScanMode = 'location' | 'item';
-type FocusArea = 'input' | 'list' | 'actions';
-
 export function InventoryPage() {
-  var navigate = useNavigate();
-  var [location, setLocation] = useState('');
-  var [items, setItems] = useState<InventoryItem[]>([]);
-  var [scanMode, setScanMode] = useState<ScanMode>('location');
-  var [inputValue, setInputValue] = useState('');
-  var [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
-  var [focusArea, setFocusArea] = useState<FocusArea>('input');
-  var [selectedItemIndex, setSelectedItemIndex] = useState(0);
-  var [selectedActionIndex, setSelectedActionIndex] = useState(0);
-  var inputRef = useRef<HTMLInputElement>(null);
-  var listRef = useRef<HTMLUListElement>(null);
+  const navigate = useNavigate();
 
-  // 入力欄に自動フォーカス
+  // 棚卸設定（バックエンドDBから取得）
+  const [config, setConfig] = useState<InventoryConfig | null>(null);
+  const [configLoading, setConfigLoading] = useState(true);
+
+  // フォーム状態
+  const [inventoryDate, setInventoryDate] = useState(formatDate(new Date()));
+  const [barcodeInput, setBarcodeInput] = useState('');
+  const [items, setItems] = useState<InventoryRecord[]>([]);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
+
+  const barcodeRef = useRef<HTMLInputElement>(null);
+  const listRef = useRef<HTMLUListElement>(null);
+
+  // 初回: バックエンドから棚卸設定を取得
   useEffect(function () {
-    if (focusArea === 'input' && inputRef.current) {
-      inputRef.current.focus();
+    let cancelled = false;
+    async function loadConfig() {
+      const result = await fetchInventoryConfig();
+      if (!cancelled) {
+        setConfig(result);
+        setConfigLoading(false);
+        writeLog('INFO', 'SYSTEM', '棚卸設定ロード完了: mode=' + result.mode);
+      }
     }
-  }, [focusArea, scanMode]);
+    loadConfig();
+    return function () { cancelled = true; };
+  }, []);
+
+  // バーコード入力にフォーカス
+  useEffect(function () {
+    if (!configLoading && config && config.mode === 'online' && barcodeRef.current) {
+      barcodeRef.current.focus();
+    }
+  }, [configLoading, config]);
 
   // 選択アイテムをスクロールで表示
   useEffect(function () {
-    if (focusArea === 'list' && listRef.current && items.length > 0) {
-      var selectedElement = listRef.current.children[selectedItemIndex] as HTMLElement;
+    if (listRef.current && items.length > 0) {
+      const selectedElement = listRef.current.children[selectedIndex] as HTMLElement;
       if (selectedElement) {
         selectedElement.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
       }
     }
-  }, [selectedItemIndex, focusArea, items.length]);
+  }, [selectedIndex, items.length]);
 
-  // グローバルキーハンドラ
-  var handleGlobalKeyDown = useCallback(function (e: KeyboardEvent) {
-    // 入力フォーカス中は特別処理
-    if (focusArea === 'input') {
-      if (e.key === 'ArrowDown' && items.length > 0) {
+  // 日付をYYYY/MM/DD形式で表示用に変換
+  function formatDateDisplay(dateStr: string): string {
+    return dateStr.replace(/-/g, '/');
+  }
+
+  // 曜日取得
+  function getDayOfWeek(dateStr: string): string {
+    const days = ['日', '月', '火', '水', '木', '金', '土'];
+    const d = new Date(dateStr);
+    return days[d.getDay()];
+  }
+
+  // 登録日時のフォーマット
+  function formatRegisteredAt(isoStr: string): string {
+    const d = new Date(isoStr);
+    return formatDateTime(d).replace(/-/g, '/');
+  }
+
+  // アイテム削除
+  const handleDeleteItem = useCallback(function (index: number) {
+    setItems(function (prev) {
+      const deleted = prev[index];
+      const newItems = prev.slice();
+      newItems.splice(index, 1);
+      writeLog('INFO', 'OPERATION', '棚卸アイテム削除: ' + deleted.id);
+      setToast({ message: deleted.id + ' を削除', type: 'info' });
+
+      // インデックス調整
+      if (newItems.length === 0) {
+        setSelectedIndex(0);
+      } else if (index >= newItems.length) {
+        setSelectedIndex(newItems.length - 1);
+      }
+
+      return newItems;
+    });
+  }, []);
+
+  // リスト部分のキーボード操作（グローバル）
+  const handleListKeyDown = useCallback(function (e: KeyboardEvent) {
+    // バーコード入力中はリストキー操作を無効化
+    if (document.activeElement === barcodeRef.current) return;
+    // 日付入力中もスキップ
+    if (document.activeElement && (document.activeElement as HTMLElement).tagName === 'INPUT') return;
+
+    switch (e.key) {
+      case 'ArrowUp':
         e.preventDefault();
-        setFocusArea('list');
-        setSelectedItemIndex(0);
-      } else if (e.key === 'Escape' || (e.key === 'Backspace' && !inputValue)) {
+        setSelectedIndex(function (prev) {
+          return prev > 0 ? prev - 1 : prev;
+        });
+        break;
+      case 'ArrowDown':
+        e.preventDefault();
+        setSelectedIndex(function (prev) {
+          return prev < items.length - 1 ? prev + 1 : prev;
+        });
+        break;
+      case 'Delete':
+      case 'Backspace':
+        e.preventDefault();
+        if (items.length > 0) {
+          handleDeleteItem(selectedIndex);
+        }
+        break;
+      case 'Escape':
         e.preventDefault();
         navigate('/');
-      }
-      return;
+        break;
+      default:
+        break;
     }
-
-    // リストフォーカス中
-    if (focusArea === 'list') {
-      switch (e.key) {
-        case 'ArrowUp':
-          e.preventDefault();
-          if (selectedItemIndex > 0) {
-            setSelectedItemIndex(selectedItemIndex - 1);
-          } else {
-            setFocusArea('input');
-          }
-          break;
-        case 'ArrowDown':
-          e.preventDefault();
-          if (selectedItemIndex < items.length - 1) {
-            setSelectedItemIndex(selectedItemIndex + 1);
-          } else {
-            setFocusArea('actions');
-            setSelectedActionIndex(0);
-          }
-          break;
-        case 'Delete':
-        case 'Backspace':
-          e.preventDefault();
-          if (items.length > 0) {
-            handleDeleteItem(selectedItemIndex);
-          }
-          break;
-        case 'Escape':
-          e.preventDefault();
-          setFocusArea('input');
-          break;
-        default:
-          break;
-      }
-      return;
-    }
-
-    // アクションフォーカス中
-    if (focusArea === 'actions') {
-      switch (e.key) {
-        case 'ArrowUp':
-          e.preventDefault();
-          if (items.length > 0) {
-            setFocusArea('list');
-            setSelectedItemIndex(items.length - 1);
-          } else {
-            setFocusArea('input');
-          }
-          break;
-        case 'ArrowLeft':
-          e.preventDefault();
-          setSelectedActionIndex(0);
-          break;
-        case 'ArrowRight':
-          e.preventDefault();
-          setSelectedActionIndex(1);
-          break;
-        case 'Enter':
-          e.preventDefault();
-          if (selectedActionIndex === 0) {
-            handleClear();
-          } else {
-            handleComplete();
-          }
-          break;
-        case 'Escape':
-          e.preventDefault();
-          setFocusArea('input');
-          break;
-        default:
-          break;
-      }
-      return;
-    }
-  }, [focusArea, selectedItemIndex, selectedActionIndex, items, inputValue, navigate]);
+  }, [items.length, selectedIndex, handleDeleteItem, navigate]);
 
   useEffect(function () {
-    window.addEventListener('keydown', handleGlobalKeyDown);
+    window.addEventListener('keydown', handleListKeyDown);
     return function () {
-      window.removeEventListener('keydown', handleGlobalKeyDown);
+      window.removeEventListener('keydown', handleListKeyDown);
     };
-  }, [handleGlobalKeyDown]);
+  }, [handleListKeyDown]);
 
-  function handleInputKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === 'Enter' && inputValue.trim()) {
-      e.preventDefault();
-      handleScan(inputValue.trim());
-      setInputValue('');
-    }
+  // ローディング中
+  if (configLoading) {
+    return (
+      <AppLayout title="棚卸登録">
+        <div className={styles.container}>
+          <div className={styles.loadingMessage}>棚卸設定を読み込み中...</div>
+        </div>
+      </AppLayout>
+    );
   }
 
-  function handleScan(value: string) {
-    if (scanMode === 'location') {
-      setLocation(value);
-      setScanMode('item');
-      writeLog('INFO', 'OPERATION', '棚卸ロケーション設定: ' + value);
-      setToast({ message: 'ロケーション: ' + value, type: 'success' });
-    } else {
-      if (!location) {
-        setToast({ message: '先にロケーションをスキャンしてください', type: 'error' });
-        return;
-      }
-
-      var existingIndex = items.findIndex(function (item) {
-        return item.code === value;
-      });
-
-      if (existingIndex >= 0) {
-        var newItems = items.slice();
-        newItems[existingIndex] = {
-          ...newItems[existingIndex],
-          quantity: newItems[existingIndex].quantity + 1,
-        };
-        setItems(newItems);
-        writeLog('INFO', 'SCAN', '棚卸スキャン(加算): ' + value + ' x' + newItems[existingIndex].quantity);
-      } else {
-        var newItem: InventoryItem = {
-          id: generateId(),
-          code: value,
-          quantity: 1,
-          scannedAt: new Date().toISOString(),
-        };
-        setItems(function (prev) { return prev.concat([newItem]); });
-        writeLog('INFO', 'SCAN', '棚卸スキャン(新規): ' + value);
-      }
-
-      setToast({ message: value + ' を読取', type: 'success' });
-    }
+  // オフラインの時は画面を開けないようにする
+  if (config && config.mode === 'offline') {
+    return (
+      <AppLayout title="棚卸登録">
+        <div className={styles.container}>
+          <div className={styles.offlineMessage}>
+            オフラインモードのため棚卸機能は利用できません。
+            <br />
+            サーバーに接続してください。
+          </div>
+        </div>
+      </AppLayout>
+    );
   }
 
-  function handleDeleteItem(index: number) {
-    var deletedItem = items[index];
-    var newItems = items.slice();
-    newItems.splice(index, 1);
-    setItems(newItems);
-    writeLog('INFO', 'OPERATION', '棚卸アイテム削除: ' + deletedItem.code);
-    setToast({ message: deletedItem.code + ' を削除', type: 'info' });
+  // ヘッダーの日付表示
+  const headerDateStr = formatDateDisplay(inventoryDate) + '(' + getDayOfWeek(inventoryDate) + ')';
 
-    if (newItems.length === 0) {
-      setFocusArea('input');
-    } else if (selectedItemIndex >= newItems.length) {
-      setSelectedItemIndex(newItems.length - 1);
-    }
-  }
+  // ログインユーザー名取得
+  const loggedInUser = sessionStorage.getItem('loggedInUser') || '';
 
-  function handleClear() {
-    setItems([]);
-    setLocation('');
-    setScanMode('location');
-    setFocusArea('input');
-    writeLog('INFO', 'OPERATION', '棚卸データクリア');
-    setToast({ message: 'データをクリアしました', type: 'info' });
-  }
+  // バーコードスキャン → サーバーから品番取得 → リストに追加
+  async function handleScanBarcode() {
+    const barcode = barcodeInput.trim();
+    if (!barcode) return;
 
-  function handleComplete() {
-    if (items.length === 0) {
-      setToast({ message: '読取データがありません', type: 'error' });
+    // 重複チェック
+    const exists = items.some(function (item) { return item.id === barcode; });
+    if (exists) {
+      setToast({ message: 'このIDは既に登録されています', type: 'error' });
+      setBarcodeInput('');
+      if (barcodeRef.current) barcodeRef.current.focus();
       return;
     }
 
-    writeLog('INFO', 'OPERATION', '棚卸完了: ロケーション=' + location + ', 件数=' + items.length);
-    setToast({ message: '棚卸を完了しました (' + items.length + '件)', type: 'success' });
+    // オンライン時: サーバーを見に行って品番を取得表示する
+    const product = await fetchProductByBarcode(barcode);
+    if (product) {
+      setItems(function (prev) { return prev.concat([product]); });
+      setToast({ message: barcode + ' を読取', type: 'success' });
+    } else {
+      // 品番が見つからなくても登録（品番なしで）
+      const newItem: InventoryRecord = {
+        id: barcode,
+        hinban: '',
+        kata: '',
+        joudai: 0,
+        registeredAt: new Date().toISOString(),
+      };
+      setItems(function (prev) { return prev.concat([newItem]); });
+      setToast({ message: barcode + ' を読取（品番情報なし）', type: 'info' });
+    }
 
-    setItems([]);
-    setLocation('');
-    setScanMode('location');
-    setFocusArea('input');
+    setBarcodeInput('');
+    if (barcodeRef.current) barcodeRef.current.focus();
   }
 
-  var totalQuantity = items.reduce(function (sum, item) {
-    return sum + item.quantity;
-  }, 0);
+  // 入力でEnterキー
+  function handleBarcodeKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleScanBarcode();
+    }
+  }
 
   return (
-    <AppLayout title="棚卸">
+    <AppLayout title="棚卸登録" headerRight={
+      <span className={styles.headerInfo}>
+        <span className={styles.headerDate}>{headerDateStr}</span>
+        <span className={styles.headerUser}>{loggedInUser}</span>
+      </span>
+    }>
       <div className={styles.container}>
-        {/* モード・ロケーション表示 */}
-        <div className={styles.infoRow}>
-          <div className={styles.modeIndicator}>
-            <span className={scanMode === 'location' ? styles.modeActive : styles.modeInactive}>
-              LOC
-            </span>
-            <span className={scanMode === 'item' ? styles.modeActive : styles.modeInactive}>
-              商品
-            </span>
+        {/* 入力エリア: 棚卸日付 + ID */}
+        <div className={styles.inputArea}>
+          <div className={styles.inputRow}>
+            <label className={styles.inputLabel}>棚卸日<br />付</label>
+            <input
+              type="date"
+              className={styles.dateInput}
+              value={inventoryDate}
+              onChange={function (e) { setInventoryDate(e.target.value); }}
+            />
           </div>
-          <div className={styles.locationDisplay}>
-            {location || '(未設定)'}
+          <div className={styles.inputRow}>
+            <label className={styles.inputLabel}>ID</label>
+            <input
+              ref={barcodeRef}
+              type="text"
+              className={styles.barcodeInput}
+              value={barcodeInput}
+              onChange={function (e) { setBarcodeInput(e.target.value); }}
+              onKeyDown={handleBarcodeKeyDown}
+              placeholder=""
+            />
           </div>
         </div>
 
-        {/* スキャン入力 */}
-        <div className={styles.inputSection}>
-          <input
-            ref={inputRef}
-            type="text"
-            className={focusArea === 'input' ? styles.inputFocused : styles.input}
-            value={inputValue}
-            onChange={function (e) { setInputValue(e.target.value); }}
-            onKeyDown={handleInputKeyDown}
-            onFocus={function () { setFocusArea('input'); }}
-            placeholder={scanMode === 'location' ? 'ロケーションをスキャン...' : '商品をスキャン...'}
-          />
+        {/* 件数ヘッダー */}
+        <div className={styles.listHeader}>
+          <StatusBadge count={items.length} label="件" />
         </div>
 
-        {/* 読取結果 */}
-        <div className={styles.resultSection}>
-          <div className={styles.resultHeader}>
-            <span className={styles.resultTitle}>読取結果</span>
-            <span className={styles.resultCount}>{items.length}品目/{totalQuantity}点</span>
+        {/* リスト */}
+        {items.length === 0 ? (
+          <div className={styles.empty}>
+            <span className={styles.emptyIcon}>📋</span>
+            <span>スキャンデータはありません</span>
           </div>
-
-          {items.length === 0 ? (
-            <div className={styles.emptyList}>
-              <span>データなし</span>
-            </div>
-          ) : (
-            <ul ref={listRef} className={styles.itemList}>
-              {items.map(function (item, index) {
-                var isSelected = focusArea === 'list' && index === selectedItemIndex;
-                return (
-                  <li
-                    key={item.id}
-                    className={isSelected ? styles.itemSelected : styles.item}
-                    onClick={function () {
-                      setFocusArea('list');
-                      setSelectedItemIndex(index);
-                    }}
-                  >
-                    <span className={styles.itemCode}>{item.code}</span>
-                    <span className={styles.itemQty}>×{item.quantity}</span>
-                    {isSelected && <span className={styles.deleteHint}>DEL:削除</span>}
-                  </li>
-                );
-              })}
-            </ul>
-          )}
-        </div>
-
-        {/* アクションボタン */}
-        <div className={styles.actions}>
-          <button
-            className={focusArea === 'actions' && selectedActionIndex === 0 ? styles.btnClearFocused : styles.btnClear}
-            onClick={handleClear}
-          >
-            クリア
-          </button>
-          <button
-            className={focusArea === 'actions' && selectedActionIndex === 1 ? styles.btnCompleteFocused : styles.btnComplete}
-            onClick={handleComplete}
-            disabled={items.length === 0}
-          >
-            完了
-          </button>
-        </div>
+        ) : (
+          <ul ref={listRef} className={styles.list}>
+            {items.map(function (item, index) {
+              const isSelected = index === selectedIndex;
+              return (
+                <li
+                  key={item.id}
+                  className={isSelected ? styles.itemSelected : styles.item}
+                  onClick={function () { setSelectedIndex(index); }}
+                >
+                  <div className={styles.itemInfo}>
+                    <span className={styles.itemIndex}>{index + 1}</span>
+                    <div className={styles.itemDetail}>
+                      <span className={styles.itemValue}>{item.id}</span>
+                      <span className={styles.itemSub}>
+                        {item.hinban ? item.hinban : '---'}
+                        {item.kata ? ' / ' + item.kata : ''}
+                        {item.joudai ? ' / ¥' + item.joudai : ''}
+                      </span>
+                      <span className={styles.itemTime}>{formatRegisteredAt(item.registeredAt)}</span>
+                    </div>
+                  </div>
+                  {isSelected && (
+                    <button
+                      className={styles.deleteButton}
+                      onClick={function (e) { e.stopPropagation(); handleDeleteItem(index); }}
+                    >
+                      ×
+                    </button>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        )}
 
         {/* 操作ヒント */}
         <div className={styles.hint}>
-          ↑↓:選択 DEL:削除 Enter:決定
+          ↑↓:選択 DEL:削除
         </div>
       </div>
 

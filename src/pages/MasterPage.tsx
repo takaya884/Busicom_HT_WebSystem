@@ -1,6 +1,7 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Header } from '../components/layout/Header';
+import { AppLayout } from '../components/layout/AppLayout';
+import { Toast } from '../components/common/Toast';
 import styles from './MasterPage.module.css';
 
 /**
@@ -11,29 +12,23 @@ export function MasterPage() {
   const inputRef = useRef<HTMLInputElement>(null);
   const [scannedCode, setScannedCode] = useState('');
   const [items, setItems] = useState<Array<{ code: string; name: string }>>([]);
-  const [toast, setToast] = useState<string | null>(null);
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
 
   useEffect(function() {
     inputRef.current?.focus();
   }, []);
 
-  const showToast = useCallback(function(message: string) {
-    setToast(message);
-    setTimeout(function() { setToast(null); }, 2000);
-  }, []);
-
   function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Enter') {
       e.preventDefault();
-      var code = scannedCode.trim();
+      const code = scannedCode.trim();
       if (code) {
-        // 重複チェック
-        var exists = items.some(function(item) { return item.code === code; });
+        const exists = items.some(function(item) { return item.code === code; });
         if (exists) {
-          showToast('登録済み: ' + code);
+          setToast({ message: '登録済み: ' + code, type: 'info' });
         } else {
           setItems(items.concat([{ code: code, name: '' }]));
-          showToast('マスタ追加: ' + code);
+          setToast({ message: 'マスタ追加: ' + code, type: 'success' });
         }
         setScannedCode('');
       }
@@ -45,17 +40,15 @@ export function MasterPage() {
   }
 
   function handleDelete(index: number) {
-    var newItems = items.slice();
+    const newItems = items.slice();
     newItems.splice(index, 1);
     setItems(newItems);
-    showToast('削除しました');
+    setToast({ message: '削除しました', type: 'info' });
   }
 
   return (
-    <div className={styles.container}>
-      <Header title="マスタ作成" />
-
-      <main className={styles.main}>
+    <AppLayout title="マスタ作成">
+      <div className={styles.container}>
         <div className={styles.inputSection}>
           <input
             ref={inputRef}
@@ -99,13 +92,20 @@ export function MasterPage() {
           <button className={styles.buttonClear} onClick={function() { setItems([]); }}>
             クリア
           </button>
-          <button className={styles.buttonPrimary} onClick={function() { showToast('マスタ保存完了'); }}>
+          <button className={styles.buttonPrimary} onClick={function() { setToast({ message: 'マスタ保存完了', type: 'success' }); }}>
             保存
           </button>
         </div>
-      </main>
+      </div>
 
-      {toast && <div className={styles.toast}>{toast}</div>}
-    </div>
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={function() { setToast(null); }}
+          duration={2000}
+        />
+      )}
+    </AppLayout>
   );
 }

@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Header } from '../components/layout/Header';
+import { AppLayout } from '../components/layout/AppLayout';
 import styles from './ReceiveDataPage.module.css';
 
 /**
@@ -48,10 +48,8 @@ export function ReceiveDataPage() {
   }
 
   return (
-    <div className={styles.container} onKeyDown={handleKeyDown} tabIndex={0}>
-      <Header title="データ受信" />
-
-      <main className={styles.main}>
+    <AppLayout title="データ受信">
+      <div className={styles.container} onKeyDown={handleKeyDown} tabIndex={0}>
         <div className={styles.content}>
           <div className={styles.iconArea}>
             {status === 'idle' && <span className={styles.icon}>📥</span>}
@@ -99,7 +97,7 @@ export function ReceiveDataPage() {
         <div className={styles.hint}>
           Enter: 受信開始
         </div>
-      </main>
-    </div>
+      </div>
+    </AppLayout>
   );
 }

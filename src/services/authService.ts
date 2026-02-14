@@ -1,6 +1,7 @@
 import { writeLog } from './logService';
 import { getDatabase, saveDatabase } from './sqliteService';
 import { checkNetwork } from './networkService';
+import { isDevMode } from '../utils/envUtils';
 import type { AuthResult } from '../types';
 
 /** APIのベースURLを取得 */
@@ -80,7 +81,8 @@ function saveUserToLocal(userId: string, password: string): void {
 
 /**
  * ログイン処理
- * オンライン時: サーバー認証 → ローカルにキャッシュ
+ * オンライン時: サーバー認証 → 成功時ローカルにキャッシュ
+ *               サーバー接続失敗時はオフライン認証にフォールバック
  * オフライン時: ローカルSQLiteで認証
  */
 export async function login(userId: string, password: string): Promise<AuthResult> {
@@ -88,11 +90,23 @@ export async function login(userId: string, password: string): Promise<AuthResul
     return { success: false, message: 'IDとパスワードを入力してください' };
   }
 
+  // 開発モードではサーバー接続せずローカルSQLiteで認証
+  if (isDevMode()) {
+    writeLog('INFO', 'SYSTEM', '[DEV] 開発モード: ローカル認証');
+    return authenticateOffline(userId, password);
+  }
+
   const isOnline = await checkNetwork();
 
   if (isOnline) {
     writeLog('INFO', 'SYSTEM', 'オンラインモードで認証開始');
-    return authenticateOnline(userId, password);
+    const onlineResult = await authenticateOnline(userId, password);
+    // サーバー接続失敗（通信エラー/サーバーエラー）の場合はオフラインにフォールバック
+    if (!onlineResult.success && onlineResult.message !== 'IDまたはパスワードが正しくありません') {
+      writeLog('INFO', 'SYSTEM', 'サーバー接続失敗のためオフライン認証にフォールバック');
+      return authenticateOffline(userId, password);
+    }
+    return onlineResult;
   } else {
     writeLog('INFO', 'SYSTEM', 'オフラインモードで認証開始');
     return authenticateOffline(userId, password);
