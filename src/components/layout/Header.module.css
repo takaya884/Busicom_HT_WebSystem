@@ -3,8 +3,8 @@
   display: flex;
   -webkit-align-items: center;
   align-items: center;
-  background: -webkit-linear-gradient(135deg, #10b981, #059669);
-  background: linear-gradient(135deg, #10b981, #059669);
+  background: -webkit-linear-gradient(135deg, #3b82f6, #2563eb);
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
   color: #fff;
   padding: 4px 8px;
   height: 28px;

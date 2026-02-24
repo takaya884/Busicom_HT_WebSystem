@@ -23,7 +23,7 @@
   width: 100%;
   padding: 8px;
   font-size: 14px;
-  border: 2px solid #10b981;
+  border: 2px solid #3b82f6;
   border-radius: 8px;
   outline: none;
   -webkit-box-sizing: border-box;
@@ -34,7 +34,7 @@
 }
 
 .input:focus {
-  border-color: #059669;
+  border-color: #2563eb;
   -webkit-box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
   box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
 }
@@ -46,8 +46,8 @@
 }
 
 .lastScanned {
-  background: #ecfdf5;
-  border: 1px solid #a7f3d0;
+  background: #eff6ff;
+  border: 1px solid #93c5fd;
   border-radius: 8px;
   padding: 6px 8px;
   font-size: 12px;
@@ -60,7 +60,7 @@
 
 .lastValue {
   font-weight: 600;
-  color: #059669;
+  color: #2563eb;
   word-break: break-all;
 }
 

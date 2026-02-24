@@ -16,7 +16,7 @@
 
 .serverInfo {
   background: #fff;
-  border: 1px solid #d1fae5;
+  border: 1px solid #bfdbfe;
   border-radius: 6px;
   padding: 6px 8px;
   font-size: 10px;
@@ -29,7 +29,7 @@
 }
 
 .serverUrl {
-  color: #059669;
+  color: #2563eb;
   font-weight: 500;
   word-break: break-all;
 }
@@ -39,8 +39,8 @@
   padding: 10px;
   font-size: 13px;
   font-weight: 700;
-  background: -webkit-linear-gradient(135deg, #10b981, #059669);
-  background: linear-gradient(135deg, #10b981, #059669);
+  background: -webkit-linear-gradient(135deg, #3b82f6, #2563eb);
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
   color: #fff;
   border: 2px solid transparent;
   border-radius: 8px;
@@ -56,10 +56,10 @@
   padding: 10px;
   font-size: 13px;
   font-weight: 700;
-  background: -webkit-linear-gradient(135deg, #10b981, #059669);
-  background: linear-gradient(135deg, #10b981, #059669);
+  background: -webkit-linear-gradient(135deg, #3b82f6, #2563eb);
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
   color: #fff;
-  border: 2px solid #065f46;
+  border: 2px solid #1e40af;
   border-radius: 8px;
   cursor: pointer;
   -webkit-box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.3);
@@ -100,7 +100,7 @@
   font-weight: 600;
   background: #fff;
   color: #374151;
-  border: 2px solid #10b981;
+  border: 2px solid #3b82f6;
   border-radius: 6px;
   cursor: pointer;
   -webkit-box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);

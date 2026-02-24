@@ -15,7 +15,7 @@
   width: 100%;
   padding: 8px 10px;
   font-size: 14px;
-  border: 2px solid #10b981;
+  border: 2px solid #3b82f6;
   border-radius: 6px;
   background: white;
   outline: none;
@@ -24,7 +24,7 @@
 }
 
 .input:focus {
-  border-color: #059669;
+  border-color: #2563eb;
   -webkit-box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
   box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
 }
@@ -38,7 +38,7 @@
   background: rgba(16, 185, 129, 0.1);
   border-radius: 4px;
   font-size: 11px;
-  color: #065f46;
+  color: #1e40af;
   margin-bottom: 6px;
 }
 
@@ -50,7 +50,7 @@
   padding: 6px;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  border: 1px solid #a7f3d0;
+  border: 1px solid #93c5fd;
 }
 
 .listItem {
@@ -75,7 +75,7 @@
 }
 
 .itemQty {
-  color: #059669;
+  color: #2563eb;
   font-weight: 600;
 }
 
@@ -128,7 +128,7 @@
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  background: linear-gradient(135deg, #10b981, #059669);
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
   color: white;
 }
 

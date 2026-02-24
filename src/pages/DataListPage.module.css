@@ -117,7 +117,7 @@
 .confirmNoFocused {
   background: #fff;
   color: #374151;
-  border: 2px solid #10b981;
+  border: 2px solid #3b82f6;
   border-radius: 6px;
   padding: 6px 16px;
   font-size: 11px;
@@ -169,7 +169,7 @@
   -webkit-justify-content: space-between;
   justify-content: space-between;
   background: #fff;
-  border: 1px solid #d1fae5;
+  border: 1px solid #bfdbfe;
   border-radius: 6px;
   padding: 6px 8px;
   margin-bottom: 4px;
@@ -182,8 +182,8 @@
   align-items: center;
   -webkit-justify-content: space-between;
   justify-content: space-between;
-  background: #dcfce7;
-  border: 2px solid #10b981;
+  background: #dbeafe;
+  border: 2px solid #3b82f6;
   border-radius: 6px;
   padding: 5px 7px;
   margin-bottom: 4px;
@@ -203,8 +203,8 @@
 .itemIndex {
   font-size: 10px;
   font-weight: 700;
-  color: #059669;
-  background: #ecfdf5;
+  color: #2563eb;
+  background: #eff6ff;
   border-radius: 50%;
   width: 20px;
   height: 20px;
